@@ -1,7 +1,7 @@
 package Task5;
 
-import java.util.Iterator;
 import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 public class StreamZipper {
 
@@ -14,16 +14,12 @@ public class StreamZipper {
     }
 
     public static <T> Stream<T> zip(Stream<T> first, Stream<T> second) {
-        Iterator<T> firstIterator = first.iterator();
-        Iterator<T> secondIterator = second.iterator();
+        T[] firstArray = (T[]) first.toArray();
+        T[] secondArray = (T[]) second.toArray();
+        int minLength = Math.min(firstArray.length, secondArray.length);
 
-        Stream.Builder<T> resultStream = Stream.builder();
-
-        while (firstIterator.hasNext() && secondIterator.hasNext()) {
-            resultStream.add(firstIterator.next());
-            resultStream.add(secondIterator.next());
-        }
-
-        return resultStream.build();
+        return IntStream.range(0, minLength)
+                .mapToObj(i -> Stream.of(firstArray[i], secondArray[i]))
+                .flatMap(s -> s);
     }
 }
